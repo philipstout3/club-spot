@@ -4,6 +4,7 @@
 var express = require('express');
 var ParseServer = require('parse-server').ParseServer;
 var path = require('path');
+var ParseDashboard = require('parse-dashboard');
 
 var databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI;
 
@@ -24,6 +25,27 @@ var api = new ParseServer({
 // Client-keys like the javascript key or the .NET key are not necessary with parse-server
 // If you wish you require them, you can set them as options in the initialization above:
 // javascriptKey, restAPIKey, dotNetKey, clientKey
+
+var config = {
+  "allowInsecureHTTP": true,
+ "apps": [
+   {
+       "serverURL": process.env.SERVER_URL || 'https://clubspot-pos.com/parse',
+       "appId": process.env.APP_ID || '',
+       "masterKey": process.env.MASTER_KEY || '',
+       "appName": "club-spot", 
+       "production": false
+   }
+ ],"users": [
+   {
+       "user":"philipstout2@gmail.com",
+       "pass":"philip123"
+   }
+ ]
+};
+var dashboard = new ParseDashboard(config, config.allowInsecureHTTP);
+// make the Parse Dashboard available at /dashboard
+app.use('/parse-dashboard', dashboard);
 
 var app = express();
 
